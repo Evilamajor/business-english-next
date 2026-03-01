@@ -1,6 +1,10 @@
-import { ModuleHeader } from "@/app/components/modules/ModuleHeader";
+"use client";
+
 import { ModuleSectionNav } from "@/app/components/modules/ModuleSectionNav";
-import { getModuleBySlug, type ModuleSlug } from "@/app/lib/businessNavigation";
+import type { ModuleSlug } from "@/app/lib/businessNavigation";
+import Breadcrumb from "@/src/components/english/Breadcrumb";
+import { useBusinessUx } from "@/src/components/english/BusinessUxContext";
+import { usePathname } from "next/navigation";
 
 interface ModuleLayoutFrameProps {
   moduleSlug: ModuleSlug;
@@ -8,13 +12,20 @@ interface ModuleLayoutFrameProps {
 }
 
 export function ModuleLayoutFrame({ moduleSlug, children }: ModuleLayoutFrameProps) {
-  const moduleMeta = getModuleBySlug(moduleSlug);
+  const { readingMode } = useBusinessUx();
+  const pathname = usePathname();
+
+  if (!moduleSlug) {
+    return <div>Invalid module</div>;
+  }
 
   return (
-    <section className="space-y-8">
-      <ModuleHeader title={moduleMeta.title} description={moduleMeta.description} />
+    <section className={`space-y-4 transition-all duration-300 ${readingMode ? "md:space-y-3" : "md:space-y-5"}`}>
+      <Breadcrumb />
       <ModuleSectionNav moduleSlug={moduleSlug} />
-      <div className="pt-1">{children}</div>
+      <div key={pathname} className="module-content-fade">
+        {children}
+      </div>
     </section>
   );
 }

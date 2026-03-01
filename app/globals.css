@@ -29,3 +29,27 @@ body {
 html {
   min-height: 100%;
 }
+
+html[data-business-theme="light"] body {
+  background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 45%, #e2e8f0 100%);
+}
+
+html[data-business-theme="dark"] body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+.module-content-fade {
+  animation: module-fade-slide 240ms ease;
+}
+
+@keyframes module-fade-slide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

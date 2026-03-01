@@ -1,4 +1,8 @@
+import UocIframe from "@/src/components/english/UocIframe";
+import { uocMaterialsMap } from "@/app/lib/uocMaterialsMap";
+
 interface OverviewSectionProps {
+  moduleSlug: string;
   summary: string;
   objectives: string[];
 }
@@ -16,17 +20,20 @@ interface PracticeSectionProps {
   tasks: string[];
 }
 
-export function OverviewSection({ summary, objectives }: OverviewSectionProps) {
+export function OverviewSection({ moduleSlug, summary, objectives }: OverviewSectionProps) {
+  const contentUrl = uocMaterialsMap[moduleSlug];
+
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-8 text-slate-800 shadow-sm md:p-10">
-      <h2 className="text-2xl font-semibold tracking-tight">Overview</h2>
-      <p className="mt-4 text-base leading-8 text-slate-700">{summary}</p>
-      <h3 className="mt-8 text-lg font-semibold">Learning objectives</h3>
-      <ul className="mt-4 list-disc space-y-3 pl-6 text-base leading-7 text-slate-700">
-        {objectives.map((objective) => (
-          <li key={objective}>{objective}</li>
-        ))}
-      </ul>
+      {contentUrl ? (
+        <div className="overflow-hidden">
+          <UocIframe url={contentUrl} title={`UOC content for ${moduleSlug}`} />
+        </div>
+      ) : (
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">
+          UOC materials not available for this module yet.
+        </div>
+      )}
     </section>
   );
 }

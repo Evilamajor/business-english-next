@@ -1,41 +1,35 @@
 "use client";
 
+import type { Dispatch, SetStateAction } from "react";
 import Sidebar from "@/src/components/english/Sidebar";
-import NotesPanel from "@/src/components/english/NotesPanel";
 import {
   BusinessUxProvider,
   useBusinessUx,
 } from "@/src/components/english/BusinessUxContext";
 
-function BusinessEnglishLayoutContent({ children }: { children: React.ReactNode }) {
+function ResourcesLayoutContent({ children }: { children: React.ReactNode }) {
   const {
     sidebarVisible,
     setSidebarVisible,
-    notesOpen,
-    setNotesOpen,
-    readingMode,
     theme,
     setTheme,
-  } = useBusinessUx();
-
-  const effectiveSidebarVisible = sidebarVisible && !readingMode;
+  } = useBusinessUx() as {
+    sidebarVisible: boolean;
+    setSidebarVisible: Dispatch<SetStateAction<boolean>>;
+    theme: "dark" | "light";
+    setTheme: Dispatch<SetStateAction<"dark" | "light">>;
+  };
 
   return (
     <div className="min-h-screen w-full px-4 py-6 md:px-6 md:py-8">
       <main
         className={`grid min-h-[calc(100vh-3rem)] w-full gap-6 transition-all duration-300 ease-in-out ${
-          effectiveSidebarVisible && notesOpen
-            ? "grid-cols-[300px_1fr_350px]"
-            : effectiveSidebarVisible && !notesOpen
-              ? "grid-cols-[300px_1fr]"
-              : !effectiveSidebarVisible && notesOpen
-                ? "grid-cols-[1fr_350px]"
-                : "grid-cols-[1fr]"
+          sidebarVisible ? "grid-cols-[300px_1fr]" : "grid-cols-[1fr]"
         }`}
       >
-        {effectiveSidebarVisible ? (
+        {sidebarVisible ? (
           <aside className="h-full overflow-auto rounded-[20px] border-r border-white/15 bg-slate-900/30 p-1">
-            <h1 className="px-3 py-2 text-2xl font-bold tracking-tight text-slate-100">Business English</h1>
+            <h1 className="px-3 py-2 text-2xl font-bold tracking-tight text-slate-100">English Platform</h1>
             <Sidebar />
           </aside>
         ) : null}
@@ -45,21 +39,14 @@ function BusinessEnglishLayoutContent({ children }: { children: React.ReactNode 
             theme === "light" ? "bg-slate-50/95" : "bg-white/95"
           }`}
         >
-          <div className={`mx-auto w-full ${readingMode ? "max-w-7xl p-5 md:p-6" : "max-w-6xl p-8 md:p-10"}`}>
+          <div className="mx-auto w-full max-w-6xl p-8 md:p-10">
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => setSidebarVisible((prev) => !prev)}
                 className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
               >
-                ☰ {effectiveSidebarVisible ? "Hide Sidebar" : "Show Sidebar"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setNotesOpen((prev) => !prev)}
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
-              >
-                📝 {notesOpen ? "Hide Notes" : "My Notes"}
+                ☰ {sidebarVisible ? "Hide Sidebar" : "Show Sidebar"}
               </button>
               <button
                 type="button"
@@ -72,27 +59,15 @@ function BusinessEnglishLayoutContent({ children }: { children: React.ReactNode 
             {children}
           </div>
         </section>
-
-        {notesOpen ? (
-          <aside className="h-full overflow-auto border-l border-slate-200 bg-white transition-all duration-300">
-            <div className="h-full p-2">
-              <NotesPanel />
-            </div>
-          </aside>
-        ) : null}
       </main>
     </div>
   );
 }
 
-export default function BusinessEnglishLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ResourcesLayout({ children }: { children: React.ReactNode }) {
   return (
     <BusinessUxProvider>
-      <BusinessEnglishLayoutContent>{children}</BusinessEnglishLayoutContent>
+      <ResourcesLayoutContent>{children}</ResourcesLayoutContent>
     </BusinessUxProvider>
   );
 }

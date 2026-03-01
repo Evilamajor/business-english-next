@@ -25,13 +25,19 @@ export function ModuleSectionNav({ moduleSlug }: ModuleSectionNavProps) {
           <Link
             key={section.key}
             href={href}
-            className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-in-out ${
+            className={`group relative rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 ease-in-out ${
               isActive
                 ? "bg-blue-600 text-white shadow-md shadow-blue-300/50"
                 : "border border-slate-200 bg-white text-slate-700 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900"
             }`}
           >
             {section.label}
+            <span
+              aria-hidden
+              className={`absolute -bottom-1 left-3 right-3 h-0.5 origin-left rounded-full bg-blue-500 transition-transform duration-300 ${
+                isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+              }`}
+            />
           </Link>
         );
       })}

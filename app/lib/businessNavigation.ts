@@ -1,10 +1,4 @@
-export type ModuleSlug =
-  | "meeting-and-presentations"
-  | "telephone-skills"
-  | "videoconference-and-discussions"
-  | "internal-correspondence"
-  | "invitations-suggestions-complaints"
-  | "opening-and-closing";
+export type ModuleSlug = string;
 
 export type ModuleSectionKey = "overview" | "vocabulary" | "grammar" | "practice";
 
@@ -53,15 +47,41 @@ export const businessEnglishNav: readonly BusinessNavigationItem[] = [
   },
 ] as const;
 
+function formatSlugToTitle(slug?: string): string {
+  if (!slug) {
+    return "Untitled Module";
+  }
+
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((token) => token.charAt(0).toUpperCase() + token.slice(1))
+    .join(" ");
+}
+
 export const moduleSectionNav: readonly ModuleSectionItem[] = [
-  { key: "overview", label: "Overview", pathSegment: "" },
+  { key: "overview", label: "UOC Materials", pathSegment: "" },
   { key: "vocabulary", label: "Vocabulary", pathSegment: "vocabulary" },
   { key: "grammar", label: "Grammar", pathSegment: "grammar" },
   { key: "practice", label: "Practice", pathSegment: "practice" },
 ] as const;
 
-export function getModuleBySlug(slug: ModuleSlug): BusinessNavigationItem {
-  return businessEnglishNav.find((item) => item.slug === slug) ?? businessEnglishNav[0];
+export function getModuleBySlug(slug?: ModuleSlug): BusinessNavigationItem | null {
+  if (!slug) {
+    return null;
+  }
+
+  const existing = businessEnglishNav.find((item) => item.slug === slug);
+
+  if (existing) {
+    return existing;
+  }
+
+  return {
+    slug,
+    title: formatSlugToTitle(slug),
+    description: "Business English module overview and practice resources.",
+  };
 }
 
 export function getModuleHref(slug: ModuleSlug): string {
