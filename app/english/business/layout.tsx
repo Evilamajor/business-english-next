@@ -19,29 +19,24 @@ function BusinessEnglishLayoutContent({ children }: { children: React.ReactNode 
   } = useBusinessUx();
 
   const effectiveSidebarVisible = sidebarVisible && !readingMode;
+  const sidebarWidthClass = effectiveSidebarVisible ? "w-[300px] opacity-100" : "w-0 opacity-0";
+  const notesWidthClass = notesOpen ? "w-[350px] opacity-100" : "w-0 opacity-0";
 
   return (
     <div className="min-h-screen w-full px-4 py-6 md:px-6 md:py-8">
-      <main
-        className={`grid min-h-[calc(100vh-3rem)] w-full gap-6 transition-all duration-300 ease-in-out ${
-          effectiveSidebarVisible && notesOpen
-            ? "grid-cols-[300px_1fr_350px]"
-            : effectiveSidebarVisible && !notesOpen
-              ? "grid-cols-[300px_1fr]"
-              : !effectiveSidebarVisible && notesOpen
-                ? "grid-cols-[1fr_350px]"
-                : "grid-cols-[1fr]"
-        }`}
-      >
-        {effectiveSidebarVisible ? (
-          <aside className="h-full overflow-auto rounded-[20px] border-r border-white/15 bg-slate-900/30 p-1">
+      <main className="flex min-h-[calc(100vh-3rem)] w-full gap-6 transition-all duration-300 ease-in-out">
+        <aside
+          className={`h-full overflow-hidden rounded-[20px] border border-white/15 bg-slate-900/30 transition-all duration-300 ease-in-out ${sidebarWidthClass}`}
+          aria-hidden={!effectiveSidebarVisible}
+        >
+          <div className={`h-full w-[300px] p-1 transition-transform duration-300 ${effectiveSidebarVisible ? "translate-x-0" : "-translate-x-4"}`}>
             <h1 className="px-3 py-2 text-2xl font-bold tracking-tight text-slate-100">Business English</h1>
             <Sidebar />
-          </aside>
-        ) : null}
+          </div>
+        </aside>
 
         <section
-          className={`overflow-hidden rounded-[20px] border border-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 ${
+          className={`min-w-0 flex-1 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 ${
             theme === "light" ? "bg-slate-50/95" : "bg-white/95"
           }`}
         >
@@ -73,13 +68,14 @@ function BusinessEnglishLayoutContent({ children }: { children: React.ReactNode 
           </div>
         </section>
 
-        {notesOpen ? (
-          <aside className="h-full overflow-auto border-l border-slate-200 bg-white transition-all duration-300">
-            <div className="h-full p-2">
+        <aside
+          className={`h-full overflow-hidden border-l border-slate-200 bg-white transition-all duration-300 ease-in-out ${notesWidthClass}`}
+          aria-hidden={!notesOpen}
+        >
+          <div className={`h-full w-[350px] p-2 transition-transform duration-300 ${notesOpen ? "translate-x-0" : "translate-x-4"}`}>
               <NotesPanel />
-            </div>
-          </aside>
-        ) : null}
+          </div>
+        </aside>
       </main>
     </div>
   );

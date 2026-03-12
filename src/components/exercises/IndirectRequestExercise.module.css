@@ -1,0 +1,91 @@
+.exerciseShell {
+  position: relative;
+}
+
+.progressFill {
+  transition: width 220ms ease;
+}
+
+.slot {
+  min-height: 3.5rem;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.slot:hover {
+  transform: translateY(-1px);
+}
+
+.slotActive {
+  border-color: rgb(59 130 246 / 0.75);
+  background: rgb(239 246 255 / 1);
+  box-shadow: 0 0 0 3px rgb(191 219 254 / 0.7);
+}
+
+.wordChip {
+  cursor: grab;
+  user-select: none;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.wordChip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgb(148 163 184 / 0.2);
+}
+
+.wordChip:active {
+  cursor: grabbing;
+}
+
+.bankDock {
+  min-height: 5.5rem;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.bankDockActive {
+  border-color: rgb(96 165 250 / 0.8);
+  background: linear-gradient(180deg, rgb(248 250 252 / 1) 0%, rgb(239 246 255 / 1) 100%);
+}
+
+.successPulse {
+  animation: success-pop 360ms ease;
+}
+
+.feedbackPop {
+  animation: fade-up 220ms ease;
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0.985);
+  }
+
+  60% {
+    transform: scale(1.01);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

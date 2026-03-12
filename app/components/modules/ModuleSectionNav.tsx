@@ -19,7 +19,7 @@ export function ModuleSectionNav({ moduleSlug }: ModuleSectionNavProps) {
     <nav aria-label="Module sections" className="flex flex-wrap gap-3">
       {moduleSectionNav.map((section) => {
         const href = getModuleSectionHref(moduleSlug, section.pathSegment);
-        const isActive = pathname === href;
+        const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
         return (
           <Link

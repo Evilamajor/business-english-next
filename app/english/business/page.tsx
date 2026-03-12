@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { businessEnglishNav } from "@/app/lib/businessNavigation";
+import { businessEnglishNav, getModuleHref } from "@/app/lib/businessNavigation";
 
 export default function BusinessHome() {
   return (
@@ -15,7 +15,7 @@ export default function BusinessHome() {
         {businessEnglishNav.map((module) => (
           <Link
             key={module.slug}
-            href={`/english/business/${module.slug}`}
+            href={getModuleHref(module.slug)}
             className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
           >
             <h2 className="text-lg font-semibold text-slate-900">{module.title}</h2>

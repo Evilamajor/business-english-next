@@ -124,7 +124,7 @@ export function BusinessUxProvider({ children }) {
       }
 
       const sectionSegment = getSectionSegmentFromPathname(pathname);
-      const validSection = ["", "vocabulary", "grammar", "practice"].includes(sectionSegment)
+      const validSection = ["", "uoc-materials", "vocabulary", "grammar", "practice"].includes(sectionSegment)
         ? sectionSegment
         : "";
 

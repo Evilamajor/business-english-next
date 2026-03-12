@@ -8,13 +8,20 @@ import { useBusinessUx } from "@/src/components/english/BusinessUxContext";
 
 const defaultBasePath = "/english/business";
 
+const getChildBaseHref = (section, child) => {
+  const basePath = section.basePath ?? defaultBasePath;
+  return `${basePath}/${child.slug}`;
+};
+
 const getChildHref = (section, child) => {
   if (child.fullSlug) {
     return child.fullSlug.startsWith("/") ? child.fullSlug : `/english/${child.fullSlug}`;
   }
 
-  const basePath = section.basePath ?? defaultBasePath;
-  return `${basePath}/${child.slug}`;
+  const childBaseHref = getChildBaseHref(section, child);
+  return (section.basePath ?? defaultBasePath) === defaultBasePath
+    ? `${childBaseHref}/uoc-materials`
+    : childBaseHref;
 };
 
 const getSectionHref = (section) => {
@@ -29,7 +36,8 @@ export default function Sidebar() {
     const initialSection = englishSidebar.find((section) =>
       section.children.some((child) => {
         const href = getChildHref(section, child);
-        return pathname === href || pathname.startsWith(`${href}/`);
+        const baseHref = getChildBaseHref(section, child);
+        return pathname === href || pathname === baseHref || pathname.startsWith(`${baseHref}/`);
       }),
     );
 
@@ -41,7 +49,8 @@ export default function Sidebar() {
       englishSidebar.find((section) =>
         section.children.some((child) => {
           const href = getChildHref(section, child);
-          return pathname === href || pathname.startsWith(`${href}/`);
+          const baseHref = getChildBaseHref(section, child);
+          return pathname === href || pathname === baseHref || pathname.startsWith(`${baseHref}/`);
         }),
       )?.slug ?? null,
     [pathname],
@@ -65,7 +74,8 @@ export default function Sidebar() {
           const hasActiveChild = hasChildren
             ? section.children.some((child) => {
                 const href = getChildHref(section, child);
-                return pathname === href || pathname.startsWith(`${href}/`);
+                const baseHref = getChildBaseHref(section, child);
+                return pathname === href || pathname === baseHref || pathname.startsWith(`${baseHref}/`);
               })
             : false;
           const isMainActive = isOpen || isCurrentLeaf || hasActiveChild;
@@ -119,7 +129,11 @@ export default function Sidebar() {
                     <ul className="space-y-1 rounded-lg bg-slate-950/20 p-2">
                       {section.children.map((child) => {
                         const childHref = getChildHref(section, child);
-                        const isChildActive = pathname === childHref || pathname.startsWith(`${childHref}/`);
+                        const childBaseHref = getChildBaseHref(section, child);
+                        const isChildActive =
+                          pathname === childHref ||
+                          pathname === childBaseHref ||
+                          pathname.startsWith(`${childBaseHref}/`);
 
                         return (
                           <li key={child.slug}>

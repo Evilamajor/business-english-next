@@ -1,6 +1,6 @@
 export type ModuleSlug = string;
 
-export type ModuleSectionKey = "overview" | "vocabulary" | "grammar" | "practice";
+export type ModuleSectionKey = "overview" | "practice" | "vocabulary" | "grammar";
 
 export interface BusinessNavigationItem {
   slug: ModuleSlug;
@@ -11,7 +11,7 @@ export interface BusinessNavigationItem {
 export interface ModuleSectionItem {
   key: ModuleSectionKey;
   label: string;
-  pathSegment: "" | "vocabulary" | "grammar" | "practice";
+  pathSegment: "uoc-materials" | "practice" | "vocabulary" | "grammar";
 }
 
 export const businessEnglishNav: readonly BusinessNavigationItem[] = [
@@ -60,10 +60,10 @@ function formatSlugToTitle(slug?: string): string {
 }
 
 export const moduleSectionNav: readonly ModuleSectionItem[] = [
-  { key: "overview", label: "UOC Materials", pathSegment: "" },
+  { key: "overview", label: "UOC Materials", pathSegment: "uoc-materials" },
+  { key: "practice", label: "Practice", pathSegment: "practice" },
   { key: "vocabulary", label: "Vocabulary", pathSegment: "vocabulary" },
   { key: "grammar", label: "Grammar", pathSegment: "grammar" },
-  { key: "practice", label: "Practice", pathSegment: "practice" },
 ] as const;
 
 export function getModuleBySlug(slug?: ModuleSlug): BusinessNavigationItem | null {
@@ -84,11 +84,15 @@ export function getModuleBySlug(slug?: ModuleSlug): BusinessNavigationItem | nul
   };
 }
 
-export function getModuleHref(slug: ModuleSlug): string {
+export function getModuleBaseHref(slug: ModuleSlug): string {
   return `/english/business/${slug}`;
 }
 
+export function getModuleHref(slug: ModuleSlug): string {
+  return `${getModuleBaseHref(slug)}/uoc-materials`;
+}
+
 export function getModuleSectionHref(slug: ModuleSlug, pathSegment: ModuleSectionItem["pathSegment"]): string {
-  const moduleHref = getModuleHref(slug);
-  return pathSegment ? `${moduleHref}/${pathSegment}` : moduleHref;
+  const moduleHref = getModuleBaseHref(slug);
+  return `${moduleHref}/${pathSegment}`;
 }

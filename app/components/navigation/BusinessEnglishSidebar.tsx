@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { businessEnglishNav, getModuleHref } from "@/app/lib/businessNavigation";
+import {
+  businessEnglishNav,
+  getModuleBaseHref,
+  getModuleHref,
+} from "@/app/lib/businessNavigation";
 
 export function BusinessEnglishSidebar() {
   const pathname = usePathname();
@@ -15,7 +19,8 @@ export function BusinessEnglishSidebar() {
       <div className="space-y-2">
         {businessEnglishNav.map((item) => {
           const href = getModuleHref(item.slug);
-          const isActive = pathname === href || pathname.startsWith(`${href}/`);
+          const baseHref = getModuleBaseHref(item.slug);
+          const isActive = pathname === href || pathname === baseHref || pathname.startsWith(`${baseHref}/`);
 
           return (
             <Link
