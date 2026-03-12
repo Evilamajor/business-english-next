@@ -1,13 +1,20 @@
 /** @type {import('next').NextConfig} */
+
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig = {
-  output: 'export',
+  output: "export",
+
   images: {
     unoptimized: true,
   },
-  basePath: '/business-english-next',
+
+  // Use basePath only when deploying to GitHub Pages
+  basePath: isProd ? "/business-english-next" : "",
+
   typescript: {
     ignoreBuildErrors: true,
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
