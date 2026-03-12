@@ -7,11 +7,12 @@ import {
   businessModuleContent,
   type ModuleContent,
 } from "@/app/lib/businessModuleContent";
-import { getModuleBySlug, type ModuleSlug } from "@/app/lib/businessNavigation";
 import {
-  getModulePracticeExercises,
-  getPracticeExerciseHref,
-} from "@/app/lib/modulePracticeExercises";
+  getModuleBaseHref,
+  getModuleBySlug,
+  type ModuleSlug,
+} from "@/app/lib/businessNavigation";
+import { getExercisesByModule } from "@/src/lib/exerciseEngine";
 
 function formatModuleTitle(moduleSlug: ModuleSlug): string {
   const moduleMeta = getModuleBySlug(moduleSlug);
@@ -84,15 +85,15 @@ export function ModuleGrammarPage({ moduleSlug }: ModuleSectionPageProps) {
   );
 }
 
-export function ModulePracticePage({ moduleSlug }: ModuleSectionPageProps) {
+export async function ModulePracticePage({ moduleSlug }: ModuleSectionPageProps) {
   const title = formatModuleTitle(moduleSlug);
-  const practiceExercises = getModulePracticeExercises(moduleSlug);
+  const practiceExercises = await getExercisesByModule(moduleSlug);
 
   if (practiceExercises.length === 0) {
     return (
       <UnderConstructionSection
         title={`${title} — Practice Exercises`}
-        description="This practice library is ready for exercise cards, but this module does not have published activities yet. Add a new exercise page and register its card to expand the library."
+        description="This practice library is ready for file-based exercises, but this module does not have published activities yet. Add a new exercise file under src/exercises to populate this library automatically."
       />
     );
   }
@@ -110,11 +111,11 @@ export function ModulePracticePage({ moduleSlug }: ModuleSectionPageProps) {
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
         {practiceExercises.map((exercise) => (
           <ExerciseCard
-            key={exercise.slug}
+            key={exercise.id}
             title={exercise.title}
             description={exercise.description}
             difficulty={exercise.difficulty}
-            href={getPracticeExerciseHref(moduleSlug, exercise.slug)}
+            href={`${getModuleBaseHref(moduleSlug)}/practice/${exercise.id}`}
           />
         ))}
       </div>

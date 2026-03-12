@@ -1,12 +1,21 @@
 import Link from "next/link";
 
 import styles from "./ExerciseCard.module.css";
+import type { ExerciseDifficulty } from "@/src/types/exercise";
 
 interface ExerciseCardProps {
   title: string;
   description: string;
   href: string;
-  difficulty?: string;
+  difficulty?: ExerciseDifficulty;
+}
+
+function formatDifficultyLabel(difficulty?: ExerciseDifficulty): string | null {
+  if (!difficulty) {
+    return null;
+  }
+
+  return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 }
 
 export default function ExerciseCard({
@@ -15,13 +24,15 @@ export default function ExerciseCard({
   href,
   difficulty,
 }: ExerciseCardProps) {
+  const difficultyLabel = formatDifficultyLabel(difficulty);
+
   return (
     <article
       className={`flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 text-slate-800 shadow-sm ${styles.card}`}
     >
       <div className="flex-1">
-        {difficulty ? (
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">{difficulty}</p>
+        {difficultyLabel ? (
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">{difficultyLabel}</p>
         ) : null}
 
         <h3 className="mt-2 text-xl font-semibold tracking-tight text-slate-900">{title}</h3>

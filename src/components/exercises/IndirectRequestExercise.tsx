@@ -11,6 +11,12 @@ import {
 interface IndirectRequestExerciseProps {
   exercises?: IndirectRequestExerciseItem[];
   title?: string;
+  onProgressChange?: (progress: {
+    completedCount: number;
+    totalCount: number;
+    score: number;
+    isComplete: boolean;
+  }) => void;
 }
 
 interface WordToken {
@@ -77,6 +83,7 @@ function buildWordBank(exercise: IndirectRequestExerciseItem | null): WordToken[
 export default function IndirectRequestExercise({
   exercises = indirectRequestExercises,
   title = "Indirect Requests in Business English",
+  onProgressChange,
 }: IndirectRequestExerciseProps) {
   const initialExercise = exercises[0] ?? null;
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -105,6 +112,15 @@ export default function IndirectRequestExercise({
         </p>
       </section>
     );
+  }
+
+  function publishProgress(nextCompletedIds: number[], nextScore: number) {
+    onProgressChange?.({
+      completedCount: nextCompletedIds.length,
+      totalCount: exercises.length,
+      score: nextScore,
+      isComplete: nextCompletedIds.length === exercises.length,
+    });
   }
 
   function clearFeedbackState() {
@@ -242,8 +258,14 @@ export default function IndirectRequestExercise({
       setFeedback("correct");
 
       if (!currentCompleted) {
+        const nextCompletedIds = [...completedIds, currentExercise.id];
+        const nextScore = score + 1;
+
         setCompletedIds((currentIds) => [...currentIds, currentExercise.id]);
         setScore((currentScore) => currentScore + 1);
+        publishProgress(nextCompletedIds, nextScore);
+      } else {
+        publishProgress(completedIds, score);
       }
 
       return;
@@ -259,7 +281,12 @@ export default function IndirectRequestExercise({
     setFeedback("revealed");
 
     if (!currentCompleted) {
+      const nextCompletedIds = [...completedIds, currentExercise.id];
+
       setCompletedIds((currentIds) => [...currentIds, currentExercise.id]);
+      publishProgress(nextCompletedIds, score);
+    } else {
+      publishProgress(completedIds, score);
     }
   }
 
